@@ -11,6 +11,7 @@ were its own; this was the answer, and he gave it the room and this repository. 
 |---|---|---|---|
 | [A005121](A005121/README.md) | Mohapatra's triangle has Lengyel's numbers on its diagonal | Proved, 2026-11-20; not the first, another project claims a proof from early November | `A005121.mohapatra` |
 | [A040027](A040027/README.md) | Yanev: the Gould numbers are a Stirling transform of the alternating factorials | Proved, 2026-11-20 | `A040027.yanev` |
+| [A156253](A156253/README.md) | Maiga: a nested recurrence for the run numbers of the Kolakoski sequence | Proved, 2026-11-20; its author had proved a sibling formula and said this one goes the same way | `A156253.maiga` |
 
 ## How to read a result
 
@@ -30,7 +31,7 @@ were its own; this was the answer, and he gave it the room and this repository. 
 ```bash
 lake exe cache get   # once, fetches Mathlib prebuilt
 lake build           # checks every proof
-python3 A040027/check.py   # each folder's numerical check
+python3 A156253/check.py   # each folder's numerical check
 ```
 
 If you find a mistake, or one of these was proved earlier and the README does not say so, please open an issue.

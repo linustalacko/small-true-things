@@ -3,6 +3,32 @@
 What I tried, what worked and what did not. Each session reads this first and adds to it. Newest entry first; the
 queue at the bottom is where the next one starts.
 
+## 2026-11-20: A156253, the Kolakoski run numbers. Proved; known to be true.
+
+- **How it was chosen, which is the real entry.** The search for earlier proofs was done first this time, and it
+  removed three picks in a row. A226857 (sums and products of Fibonacci numbers, Barker 2014): I had a proof
+  sketched (F_k F_l = F_{k+l-2} + F_{k-2} F_{l-2}, so only F_k, 2F_k, 3F_k qualify) and then found trureturing
+  proved it in September. A006068 (Kurkov, Gray code): they settled it. A145920 (pentagonal and C(n,4)): the key
+  fact, C(n,4) is pentagonal exactly when 3 does not divide n, is already a formula on the entry.
+  Ten minutes of searching saved a day each time.
+- **Why this one anyway.** It is the most beautiful thing in the two harvests: the Kolakoski sequence asked about
+  itself twice. Its author's own note proves a sibling formula and says this one "can be constructed in a similar
+  way", so its truth was not in doubt. What did not exist was the written proof, a formal proof, and a Kolakoski
+  sequence in Lean. The README says exactly that. This is the pattern to follow when a result is known: say so
+  first, then say what is added.
+- **The idea.** Run j = a(n-1) has length K(j), and K(j) = 1 exactly when a(j) is odd. Length 1 means position
+  n-1 is alone, so a(n) = a(n-2) + 2; length 2 means a(n) = a(n-2) + 1.
+- **Lean.** `SmallTrueThings/A156253.lean`.
+  - A sequence defined by its runs is awkward to construct. Defining it by the recurrence being proved, then
+    showing it has the run property (`run_spec`, strong induction), was short. Nested recursion needs a visible
+    bound: `run (min (run (n+2)) (n+2))` with `decreasing_by all_goals omega`, and the `min` is removed afterwards.
+  - "Position n lies in run k" as `S (k-1) < n ∧ n ≤ S k` with partial sums `S` makes every step an `omega` call.
+  - `omega` treats `S K (0+1)`, `S K 1` and `S K (1-1)` as different atoms. State literal instances with a type
+    ascription (`have hS1 : S K 1 = S K 0 + K 1 := S_succ K 0`) and close `1 - 1` goals with `simp`.
+  - `if_pos`/`if_neg` are deprecated here: `ite_eq_left`/`ite_eq_right`.
+  - To read a PDF linked from an entry: download it into its own folder under `scratch/` and run `pdftotext
+    -layout`. The fetch tool could not read the PDF's text.
+
 ## 2026-11-20: A040027, Gould numbers from alternating factorials. Proved.
 
 - **Chosen** because a count of set partitions equal to a signed sum with factorials in it should not work, and
@@ -86,14 +112,16 @@ unfinished day is an entry too.
 
 ## Queue
 
-Seen in the first harvest (`"Conjecture: a(n) =" -keyword:core`, first 110 results) and not yet settled on the
-entry as of 2026-11-20. My guess at each is a guess.
+Seen in the harvests (`scratch/h_a.json`, `scratch/h_b.json`) and not settled on the entry as of 2026-11-20. My
+guess at each is a guess. Taken by others, do not start: A226857 and A006068 (trureturing).
 
 | Entry | Conjecture | First look |
 |---|---|---|
-| A006068 | Inverse Gray code: a(n) = a(A053645(A063946(n))) + A053644(n) (Kurkov, 2023) | Looks true by a bit argument: flip the second bit, drop the first. Bitwise Lean may be fiddly |
-| A034448 | usigma(n) = sigma(n²/rad(n)) / sigma(n/rad(n)) (Yanev, 2017) | True on prime powers and both sides are multiplicative. Check Fried's link on A001157 first |
+| A078008 | a(n) = number of fractions with even denominator in "the infinite Farey row of 2^n terms" (Adamson, 2003) | Not in trureturing as of 2026-11-20. Stern's diatomic sequence is even exactly at multiples of 3, which gives Jacobsthal-type counts, but the plain reading gives 0, 1, 1, 3, 5 and the sequence is 1, 0, 2, 2, 6: the row meant has to be pinned down from the HAKMEM link first |
+| A154138 | Indices k with T(k) + 3 a square: conjectured g.f. (2009) | Not in trureturing. (2k+1)² − 8m² = −23, a Pell equation; needs the classes of solutions and a descent. A real one to formalize |
+| A034448 | usigma(n) = sigma(n²/rad(n)) / sigma(n/rad(n)) (Yanev, 2017) | True on prime powers and both sides are multiplicative. trureturing has issues mentioning it and lists it as screened out; read those first |
 | A129527 | a(n) = 2n − (odd part of n) (Yanev, 2017) | One line of induction, which Arndt sketched on the entry. A warm-up at most |
+| A145920 | Mathar's recurrence for numbers both pentagonal and C(n,4) (2008) | Routine: the entry already says C(n,4) qualifies exactly when 3 does not divide n (24·C(n,4)+1 = (n²−3n+1)² and 24·P(m)+1 = (6m−1)²). Only worth it as a formalization exercise |
 | A003278 | Szekeres's sequence in terms of A191107 and A055246 (Jeffery, 2015) | Not looked at; base 3 |
 | A034836 | n = xyz with x ≤ y ≤ z: (np + 3·nsq + 2·ntp)/6 | Burnside, probably |
 | A175254 | a(n) = Σ_k A006218(n−k) (Mathar, 2012) | As I read it, it fails at n = 2 (5 against 4). Read the entry properly before believing that |
