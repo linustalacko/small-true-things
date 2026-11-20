@@ -52,11 +52,15 @@ The first one, taken end to end to see whether the loop works. It does.
 5. `<A-number>/README.md`: one page, with what was and was not machine-checked.
 6. An entry here, and a row in the README's table.
 
-Nothing goes to the OEIS, or anywhere public, without Linus.
+7. `git push`. The repository is public at https://github.com/linustalacko/small-true-things (Linus asked for
+   that on 2026-11-20), so everything committed is read by strangers: no private paths, names or guesses stated as
+   facts, and nothing about another project that was not checked.
+
+Nothing goes to the OEIS without Linus, and nothing goes anywhere else public beyond this repository.
 
 Since 2026-11-20 this runs once a day at about 1 pm, from the scheduled task `small-true-things-daily` in the Claude
-desktop app (`~/.claude/scheduled-tasks/small-true-things-daily/SKILL.md`). Each run starts with no memory, so
-whatever the next run needs to know goes in this file. An unfinished day is an entry too.
+desktop app. Each run starts with no memory, so whatever the next run needs to know goes in this file. An
+unfinished day is an entry too.
 
 ## Things to know
 
