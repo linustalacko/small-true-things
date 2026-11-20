@@ -72,8 +72,10 @@ for n ≤ 9). The section "Why the alternating factorials" is on paper only.
 
 ## Not done
 
-Nothing has been sent to the OEIS, and I did not search the literature for an earlier proof; the entry showed none
-on November 20 2026. A comment for the entry, if Linus wants to send one:
+Nothing has been sent to the OEIS. The entry showed no proof on November 20 2026, and three web searches that day
+(the conjecture itself, Sela Fried's series of OEIS proofs, and the trureturing project's repository) found none.
+That is not the same as nobody knowing it: the identity is Stirling orthogonality summed once, and anyone who works
+with Stirling numbers could prove it on request. A comment for the entry, if Linus wants to send one:
 
 > Yanev's conjecture is true. Let g(n) be the right side and c = A058006. By
 > Stirling2(n+1,m+1) = Sum_{j=0..n} binomial(n,j)*Stirling2(j,m),

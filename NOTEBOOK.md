@@ -60,6 +60,16 @@ whatever the next run needs to know goes in this file. An unfinished day is an e
 
 ## Things to know
 
+- **Others are mining the same seam, by machine.** Found 2026-11-20: the GitHub project
+  `the-omega-institute/trureturing` runs Claude Code and Codex agents over OEIS conjectures and proves them in Lean.
+  It has about 1,300 issues with OEIS in the title, and it registered the A005121 conjecture on November 5, two weeks
+  before the proof here (issue 27085, marked "Proved"). Sela Fried publishes a paper series of OEIS proofs. So:
+  before starting a conjecture, search that repository for the A-number
+  (`gh api "search/issues?q=repo:the-omega-institute/trureturing+A005121"`), search the web for the conjecture, and
+  write in the README what was searched and found. Say "independent" unless priority has really been checked. If
+  someone has it already, a different proof, or what the result means, can still be worth a page; a duplicate
+  formal proof is not.
+
 - **The OEIS refuses fast readers.** `https://oeis.org/search?q=…&fmt=json&start=N` gives ten entries a page; after
   eleven pages at 1.2 s apart it answered 403 for the rest of the run, and worked again some minutes later. Fetch a
   few pages a session, slowly, and keep what comes back in `scratch/`. One entry: `search?q=id:A040027&fmt=json`.

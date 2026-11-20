@@ -90,9 +90,20 @@ the same file are a triangle and a sequence that obey the rules, which shows the
 What Lean does not check: that Lengyel's recurrence counts the chains. That is the entry's own formula (Lengyel
 1984), and the brute-force count agrees with it for n ≤ 8.
 
+## Not the first
+
+Found after the proof was written, when Linus asked whether anyone else had proved it. An automated proving project,
+[the-omega-institute/trureturing](https://github.com/the-omega-institute/trureturing/issues/27085), registered this
+same conjecture as a target on November 5 2026, two weeks before this proof, with the same reading of it (any `R` and
+`a` obeying the printed rules, Mathlib's `Nat.stirlingSecond`). The issue's title is marked "Proved". Their Lean file
+was not found on the repository's default branch, so their proof is unverified from here, but this proof should be
+called independent, not first. Their issue says it claims no combinatorial meaning for the triangle, so the corollary
+above may be the only part that is new; that was not checked either.
+
 ## Not done
 
-Nothing has been sent to the OEIS. A comment for the entry, if Linus wants to send one:
+Nothing has been sent to the OEIS. A comment for the entry, if Linus wants to send one (check the entry and the
+project above first; a proof may be posted there already):
 
 > Mohapatra's conjecture is true. For 1 <= k < n, R(n,k) = Sum_{m=k..n-1} a(m)*k*h_{n-m-1}(k,...,m), where h_d is
 > the complete homogeneous symmetric polynomial of degree d; summing over k, with
