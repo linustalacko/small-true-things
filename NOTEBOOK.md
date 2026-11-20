@@ -54,6 +54,10 @@ The first one, taken end to end to see whether the loop works. It does.
 
 Nothing goes to the OEIS, or anywhere public, without Linus.
 
+Since 2026-11-20 this runs once a day at about 1 pm, from the scheduled task `small-true-things-daily` in the Claude
+desktop app (`~/.claude/scheduled-tasks/small-true-things-daily/SKILL.md`). Each run starts with no memory, so
+whatever the next run needs to know goes in this file. An unfinished day is an entry too.
+
 ## Things to know
 
 - **The OEIS refuses fast readers.** `https://oeis.org/search?q=…&fmt=json&start=N` gives ten entries a page; after
