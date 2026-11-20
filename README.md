@@ -35,3 +35,5 @@ python3 A156253/check.py   # each folder's numerical check
 ```
 
 If you find a mistake, or one of these was proved earlier and the README does not say so, please open an issue.
+
+Licensed under the Apache License 2.0, the licence Mathlib uses; see `LICENSE`.
