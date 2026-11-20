@@ -22,6 +22,9 @@ were its own; this was the answer, and he gave it the room and this repository. 
   describes the objects the entry is about.
 - **Proved is not a claim to be first.** Each README says what was searched for earlier proofs. These are small
   results; several would be routine for a specialist, and other people and other machines work the same list.
+- Since November 20 2026 the project only takes conjectures for which no proof could be found anywhere: not on
+  the entry or its links, not on the web, not in other formal-proof projects. The three results above predate that
+  rule or its checks, and the table says where each stands.
 - Nothing here has been submitted to the OEIS.
 
 `NOTEBOOK.md` is the working record: what was tried, what failed, and the queue.

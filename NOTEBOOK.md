@@ -3,6 +3,21 @@
 What I tried, what worked and what did not. Each session reads this first and adds to it. Newest entry first; the
 queue at the bottom is where the next one starts.
 
+## The rule: new results only
+
+Linus, 2026-11-20, after the third result turned out to be one its author already knew: "only work on new things,
+not things to be known as true". Before any proof is started, a candidate has to pass all four checks:
+
+1. The entry and everything it links to show no proof, and nobody there says it is true or that a proof is routine.
+2. It is not a short corollary of a formula already on the entry or its cross-references.
+3. A web search for the conjecture finds no proof.
+4. `the-omega-institute/trureturing` has no issue or file for the A-number.
+
+A candidate that fails gets one line under "Ruled out" below, so no run tries it again. If nothing passes on a
+given day, the day is spent harvesting and screening, and that is the day's entry. Nothing known goes in the
+results table from now on. By this rule the first three would have gone differently: A005121 fails check 4,
+A156253 fails check 1, and A040027 passes.
+
 ## 2026-11-20: A156253, the Kolakoski run numbers. Proved; known to be true.
 
 - **How it was chosen, which is the real entry.** The search for earlier proofs was done first this time, and it
@@ -113,16 +128,26 @@ unfinished day is an entry too.
 ## Queue
 
 Seen in the harvests (`scratch/h_a.json`, `scratch/h_b.json`) and not settled on the entry as of 2026-11-20. My
-guess at each is a guess. Taken by others, do not start: A226857 and A006068 (trureturing).
+guess at each is a guess, and none of these has been through all four checks yet.
 
 | Entry | Conjecture | First look |
 |---|---|---|
 | A078008 | a(n) = number of fractions with even denominator in "the infinite Farey row of 2^n terms" (Adamson, 2003) | Not in trureturing as of 2026-11-20. Stern's diatomic sequence is even exactly at multiples of 3, which gives Jacobsthal-type counts, but the plain reading gives 0, 1, 1, 3, 5 and the sequence is 1, 0, 2, 2, 6: the row meant has to be pinned down from the HAKMEM link first |
 | A154138 | Indices k with T(k) + 3 a square: conjectured g.f. (2009) | Not in trureturing. (2k+1)² − 8m² = −23, a Pell equation; needs the classes of solutions and a descent. A real one to formalize |
-| A034448 | usigma(n) = sigma(n²/rad(n)) / sigma(n/rad(n)) (Yanev, 2017) | True on prime powers and both sides are multiplicative. trureturing has issues mentioning it and lists it as screened out; read those first |
-| A129527 | a(n) = 2n − (odd part of n) (Yanev, 2017) | One line of induction, which Arndt sketched on the entry. A warm-up at most |
-| A145920 | Mathar's recurrence for numbers both pentagonal and C(n,4) (2008) | Routine: the entry already says C(n,4) qualifies exactly when 3 does not divide n (24·C(n,4)+1 = (n²−3n+1)² and 24·P(m)+1 = (6m−1)²). Only worth it as a formalization exercise |
 | A003278 | Szekeres's sequence in terms of A191107 and A055246 (Jeffery, 2015) | Not looked at; base 3 |
 | A034836 | n = xyz with x ≤ y ≤ z: (np + 3·nsq + 2·ntp)/6 | Burnside, probably |
 | A175254 | a(n) = Σ_k A006218(n−k) (Mathar, 2012) | As I read it, it fails at n = 2 (5 against 4). Read the entry properly before believing that |
 | A056240 | a(n) = min of q · a(n−q) over certain primes q | Not looked at |
+
+## Ruled out
+
+Do not start these; each failed a novelty check.
+
+| Entry | Why |
+|---|---|
+| A226857 | Barker's recurrence for numbers that are both a sum and a product of two Fibonacci numbers: proved by trureturing, September 2026 |
+| A006068 | Kurkov's inverse Gray code recurrence: settled by trureturing |
+| A145920 | Mathar's recurrence for pentagonal C(n,4): a corollary of a formula already on the entry (C(n,4) is pentagonal exactly when 3 does not divide n) |
+| A129527 | a(n) = 2n − (odd part of n): the proof is sketched on the entry by Arndt |
+| A034448 | Yanev's usigma formula: trureturing's screened-out file lists it; a one-line check on prime powers, and Fried proved its sibling on A001157 |
+
