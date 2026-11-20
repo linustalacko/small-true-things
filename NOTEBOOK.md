@@ -3,6 +3,27 @@
 What I tried, what worked and what did not. Each session reads this first and adds to it. Newest entry first; the
 queue at the bottom is where the next one starts.
 
+## 2026-11-20: A040027, Gould numbers from alternating factorials. Proved.
+
+- **Chosen** because a count of set partitions equal to a signed sum with factorials in it should not work, and
+  does. Yanev, 2021; no proof on the entry.
+- **The idea.** Put the right side into the Gould recurrence. One Stirling identity (remove the block of the last
+  element) turns the sum of earlier terms into the same sum with the column shifted by one. What is left over is
+  Σ (−1)^k k! S(n+1,k+1), which is 0. The first-session sketch used generating functions; the finite sums are
+  shorter and are what Lean wants.
+- **What it means.** The alternating factorials are forced: their differences are the first column of the inverse
+  Stirling matrix. The conjecture is Stirling orthogonality summed once. Worth trying on other "conjecture: a(n) =
+  Σ (odd sequence) · Stirling" comments: compute what the differences would have to be.
+- **Lean.** `SmallTrueThings/A040027.lean`. Two errors on the first run, both trivial. Things that helped:
+  - Write `n + 1 + 1`, never `n + 2`, in anything `rw` must match after an induction.
+  - Give `sum_range_succ` and `sum_range_succ'` the function explicitly when two sums are in the goal.
+  - Extend a triangular sum to a rectangle with `sum_subset` and `stirlingSecond_eq_zero_of_lt`, then plain
+    `sum_comm`.
+  - Work in ℤ with casts from the start when signs appear; `push_cast` then `ring`.
+- **Reusable.** `A040027.stirlingSecond_succ_succ_eq_sum_choose` (S(n+1,m+1) = Σ C(n,j) S(j,m)) and
+  `A040027.alternating_sum` are not in Mathlib. `A005121.stirlingSecond_eq_H` is the complete-homogeneous form.
+  Move them to a shared file the third time one is needed.
+
 ## 2026-11-20: A005121, Mohapatra's triangle. Proved.
 
 The first one, taken end to end to see whether the loop works. It does.
@@ -37,7 +58,7 @@ Nothing goes to the OEIS, or anywhere public, without Linus.
 
 - **The OEIS refuses fast readers.** `https://oeis.org/search?q=…&fmt=json&start=N` gives ten entries a page; after
   eleven pages at 1.2 s apart it answered 403 for the rest of the run, and worked again some minutes later. Fetch a
-  few pages a session, slowly, and keep what comes back in `scratch/`.
+  few pages a session, slowly, and keep what comes back in `scratch/`. One entry: `search?q=id:A040027&fmt=json`.
 - **Core sequences are picked clean.** Their conjectures are famous open problems or already settled; `-keyword:core`
   helps. Sela Fried has been settling Velin Yanev's conjectures since late 2025, so read the links before starting
   one of those.
@@ -52,7 +73,6 @@ entry as of 2026-11-20. My guess at each is a guess.
 
 | Entry | Conjecture | First look |
 |---|---|---|
-| A040027 | Gould numbers: a(n) = Σ_k A058006(k) · S(n+1,k+1) (Yanev, 2021) | Looks true and pretty. With G the e.g.f. of the right side, G' = (1 + e^x)G − 1, and the Gould numbers seem to obey the same recurrence. Needs the entry's definition pinned down |
 | A006068 | Inverse Gray code: a(n) = a(A053645(A063946(n))) + A053644(n) (Kurkov, 2023) | Looks true by a bit argument: flip the second bit, drop the first. Bitwise Lean may be fiddly |
 | A034448 | usigma(n) = sigma(n²/rad(n)) / sigma(n/rad(n)) (Yanev, 2017) | True on prime powers and both sides are multiplicative. Check Fried's link on A001157 first |
 | A129527 | a(n) = 2n − (odd part of n) (Yanev, 2017) | One line of induction, which Arndt sketched on the entry. A warm-up at most |

@@ -7,6 +7,7 @@ and have Lean check the proof so nobody has to take anyone's word for it.
 | Entry | Conjecture | Result | Lean |
 |---|---|---|---|
 | [A005121](A005121/README.md) | Mohapatra's triangle has Lengyel's numbers on its diagonal | Proved, 2026-11-20 | `A005121.mohapatra` |
+| [A040027](A040027/README.md) | Yanev: the Gould numbers are a Stirling transform of the alternating factorials | Proved, 2026-11-20 | `A040027.yanev` |
 
 `NOTEBOOK.md` is the working record and the queue. Each conjecture has a folder with a one-page proof and the
 script that checks it by computation; the formal proofs are in `SmallTrueThings/`.
