@@ -18,6 +18,46 @@ given day, the day is spent harvesting and screening, and that is the day's entr
 results table from now on. By this rule the first three would have gone differently: A005121 fails check 4,
 A156253 fails check 1, and A040027 passes.
 
+## 2026-11-22: screening day; A056240 started, not finished
+
+No result today. Seven candidates ruled out (table below), and one that passes every check is under way.
+
+- **Ruled out, with what settled each.** A000139 (Bala 2025: the 2-stack-sortable count is odd exactly on
+  A022341). This was the best of the day and is already a theorem: the 2005 Permutation Patterns problem list
+  (arXiv math/0505504, Bóna's problem) states it and cites a combinatorial proof by Bóna. The 2-adic proof
+  is short too: v2 a(n) = v2 C(3n,n) + 1 - v2(n+1), and by Kummer v2 C(3n,n) counts the carries in n + 2n.
+  An OEIS comment pointing to Bóna would be worth Linus's time. A000384 (Chu's hexagonal sumset):
+  trureturing issue 26346, November 4, with the same endpoint-block construction I had found. A002464, A122946:
+  proofs on the entries. A001008 (Bala's harmonic identity for all m): Niu, arXiv:2604.23206. A034836: the
+  entry cites the formula as eq. 11 of Andrica and Ionascu 2013. A175254: false as printed (n = 2 gives 5
+  against 4), almost certainly a typo for the partial-sum fact already on the entry.
+- **Screening method that saved time.** One `gh api search/issues` call per A-number, 2.2 s apart, over all 158
+  conjecture-bearing entries in the five harvests (`scratch/tr_hits.txt`, 47 hits). Do this before reading
+  anything; it caught A000384 only after I had a proof.
+- **A056240, the candidate.** a(n) is the smallest number whose prime factors add up to n. Sycamore and Marcus
+  (2017) conjecture a(n) = min{q·a(n−q) : q prime, P_n ≤ q < n−1}, where P_n is the largest Goldbach-type prime
+  (n − P_n prime for even n, n − 3 − P_n prime for odd n), n composite and not 6. In words: the cheapest number
+  with prime-sum n spends almost all of n on one large prime. Novelty: nothing on the entry, A288814 or
+  A288313; no trureturing issue or file for A056240 or A064364; a web search found nothing. Checked to n = 20000
+  (`A056240/check.py`). The conjecture assumes nothing about Goldbach; it is stated for the n where P_n exists.
+- **Proof so far, on paper.** (1) Optimal substructure: any prime q dividing a(n) has a(n) = q·a(n−q), so the
+  conjecture is equivalent to "the largest prime factor Q of a(n) is at least P_n" (checked to 5000). (2) Basic
+  bound: integers ≥ 2 with sum S and largest x have product ≥ x(S−x). (3) Product bound: if every part is below
+  S/2, the product is ≥ ⌊S²/4⌋, and > S²/4 for S ≥ 9 (checked S ≤ 120; the one failure of the weak form is
+  {2,2,2}, which is why n = 6 is excluded). Proof sketch by induction on the number of parts: take the largest
+  x and the rest Y of sum r; if Y's largest part is at most r/2 use the induction, else Y ≥ 2(r−2) by (2); both
+  close for r ≥ 5, with small r by enumeration. (4) **Even n is then done**: P ≥ n/2 (else its partner is a
+  larger candidate) and a(n) ≤ P(n−P). If Q < P: when 2Q ≥ n, a(n) ≥ Q(n−Q) > P(n−P); when 2Q < n, (3) gives
+  a(n) > n²/4 ≥ P(n−P) for n ≥ 9; n = 8 by hand. (5) **Odd n is not done.** Here a(n) ≤ 3·P·r with
+  P + r = n − 3, P ≥ r, and a(n) has at least three prime factors (two would force 2 + (n−2) and Q = n−2 ≥ P).
+  If 3 divides a(n), apply (2)/(3) to the rest with t = P and multiply by 3: done for n ≥ 12. If not, take the
+  smallest odd factor w ≥ 5: done when w ≤ r, using (w−3)(r−w) ≥ 0. Open: w > r + 1 (then all odd factors are
+  large, so r is small and the bound C is close to linear in n; a single odd factor, a(n) = 2^k·u, goes through by a direct
+  estimate because P > u forces r < 2k − 3; three or more large odd factors is the case left).
+- **Next run.** Finish the odd case on paper first, then Lean. Plan for Lean: state over any `a` with
+  `sopfr (a n) = n` and minimality as hypotheses, sopfr as `(Nat.primeFactorsList m).sum`, and prove (2) and (3)
+  for `List ℕ` by induction before touching primes. Small n (≤ 12) by `decide` on explicit factorizations.
+
 ## 2026-11-20: A156253, the Kolakoski run numbers. Proved; known to be true.
 
 - **How it was chosen, which is the real entry.** The search for earlier proofs was done first this time, and it
@@ -127,17 +167,20 @@ unfinished day is an entry too.
 
 ## Queue
 
-Seen in the harvests (`scratch/h_a.json`, `scratch/h_b.json`) and not settled on the entry as of 2026-11-20. My
+Seen in the harvests (`scratch/h_a.json` to `scratch/h_e.json`; trureturing hit counts for all of them in
+`scratch/tr_hits.txt`, 2026-11-22) and not settled on the entry as of 2026-11-20. My
 guess at each is a guess, and none of these has been through all four checks yet.
 
 | Entry | Conjecture | First look |
 |---|---|---|
 | A078008 | a(n) = number of fractions with even denominator in "the infinite Farey row of 2^n terms" (Adamson, 2003) | Not in trureturing as of 2026-11-20. Stern's diatomic sequence is even exactly at multiples of 3, which gives Jacobsthal-type counts, but the plain reading gives 0, 1, 1, 3, 5 and the sequence is 1, 0, 2, 2, 6: the row meant has to be pinned down from the HAKMEM link first |
-| A154138 | Indices k with T(k) + 3 a square: conjectured g.f. (2009) | Not in trureturing. (2k+1)² − 8m² = −23, a Pell equation; needs the classes of solutions and a descent. A real one to formalize |
+| A154138 | Indices k with T(k) + 3 a square: conjectured g.f. (2009) | Not in trureturing. (2k+1)² − 8m² = −23, a Pell equation; needs the classes of solutions and a descent. A real one to formalize. 2026-11-22: Seidov writes he believes it; the cited SeqFan thread is not archived, so whether Adams-Watters proved it there is unknown |
 | A003278 | Szekeres's sequence in terms of A191107 and A055246 (Jeffery, 2015) | Not looked at; base 3 |
-| A034836 | n = xyz with x ≤ y ≤ z: (np + 3·nsq + 2·ntp)/6 | Burnside, probably |
-| A175254 | a(n) = Σ_k A006218(n−k) (Mathar, 2012) | As I read it, it fails at n = 2 (5 against 4). Read the entry properly before believing that |
-| A056240 | a(n) = min of q · a(n−q) over certain primes q | Not looked at |
+| A056240 | a(n) = min of q · a(n−q) over primes q ≥ P_n | **In progress.** Passes all four checks (2026-11-22). Even case proved on paper, odd case open; see the 2026-11-22 entry |
+| A098557 | Mathar's recurrence for the e.g.f. (1+x)·log((1+x)/(1−x))/2 | Not screened; D-finite, likely routine, low beauty |
+| A284230 | Mathar's recurrence for self-avoiding walks in a strip | Not screened; needs the walks' own transfer matrix |
+| A338024 | Cyclic four-peg Hanoi: a(n) = a(n−1) + a(n−2) + a(n−3) − 2a(n−5) for n > 11 | Not screened; looks hard, would need an optimal-strategy theorem |
+| A383424, A383426 | Gap sets of index sequences built on the Fibonacci word A003849 | Not screened; Walnut-style automatic sequences, Dekking has settled siblings (A285683) |
 
 ## Ruled out
 
@@ -150,4 +193,13 @@ Do not start these; each failed a novelty check.
 | A145920 | Mathar's recurrence for pentagonal C(n,4): a corollary of a formula already on the entry (C(n,4) is pentagonal exactly when 3 does not divide n) |
 | A129527 | a(n) = 2n − (odd part of n): the proof is sketched on the entry by Arndt |
 | A034448 | Yanev's usigma formula: trureturing's screened-out file lists it; a one-line check on prime powers, and Fried proved its sibling on A001157 |
+| A000139 | Bala's parity conjecture (odd iff n in A022341): stated as known in the 2005 Permutation Patterns problem list (arXiv math/0505504), with a combinatorial proof by Bóna |
+| A000384 | Chu's hexagonal sumset minimum: trureturing issue 26346 (2026-11-04) |
+| A002464 | Keith's Stirling-type formula for Hertzsprung's problem: proof on the entry |
+| A122946 | Meeussen's even Markov numbers per generation: proof on the entry |
+| A001008 | Bala's general-m harmonic identity: Niu, arXiv:2604.23206 |
+| A034836 | Boxes of volume n by Burnside: the entry cites the same formula as eq. 11 of Andrica and Ionascu (2013) |
+| A175254 | Mathar's Σ A006218(n−k): false as printed (n = 2: 5 against 4), a typo for the partial-sum fact on the entry |
+| A000051 | Luschny's permanent conjecture: proved in Fried's note, per the entry |
+| A000700, A010815 | Plouffe's e^(−π) evaluations: proofs on the entries (class invariant, pentagonal theorem) |
 
