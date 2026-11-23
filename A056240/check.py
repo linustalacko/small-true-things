@@ -4,11 +4,11 @@ Conjecture on the entry (Sycamore and Marcus, 2017): for composite n other than 
     a(n) = min { q * a(n-q) : q prime, P_n <= q < n-1 },
 where P_n is the largest prime below n-1 with n - P_n prime (n even), or with n-3-P_n prime (n odd).
 
-This script checks the conjecture, and the equivalent form used in the proof attempt
-(the largest prime factor of a(n) is at least P_n), for every composite n up to N.
-It also checks the product bound the proof rests on.
+This script checks the conjecture, and the equivalent form used in the proof (the largest
+prime factor of a(n) is at least P_n), for every composite n up to N. It also checks the
+product bound the proof rests on.
 
-Run: python3 A056240/check.py [N]   (default 20000, about a minute)
+Run: python3 A056240/check.py [N]   (default 20000, a few seconds)
 """
 import sys
 from functools import lru_cache
@@ -63,9 +63,9 @@ for n in range(4, N + 1):
 print(f"conjecture: composite n = 4..{N}, n != 6, failures: {failures}")
 
 
-# The product bound: integers >= 2 with sum S, each less than S/2, have product
-# at least floor(S^2/4), and more than S^2/4 once S >= 9. The only failure of the
-# weak form is S = 6 ({2,2,2}, 8 < 9), which is why the entry excludes n = 6.
+# The product bound the proof rests on (`prod_ge_mul` in the Lean file): integers >= 2,
+# none above P, with sum P + r where r <= P and P >= 5, multiply to at least P * r.
+# For P = r = 3 it fails ({2,2,2}: 8 < 9), which is why the entry excludes n = 6.
 @lru_cache(None)
 def min_product(S, cap):
     if S == 0:
@@ -77,8 +77,10 @@ def min_product(S, cap):
     return best
 
 
-for S in range(6, 121):
-    m = min_product(S, (S - 1) // 2)
-    assert 4 * m >= S * S - S % 2 or S == 6, S
-    assert 4 * m > S * S or S <= 8, S
-print("product bound: checked S = 6..120")
+for S in range(5, 161):
+    for P in range(5, S + 1):
+        r = S - P
+        if r <= P:
+            assert min_product(S, P) >= P * r, (S, P)
+assert min_product(6, 3) == 8
+print("product bound: checked P + r = 5..160")

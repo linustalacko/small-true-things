@@ -18,6 +18,36 @@ given day, the day is spent harvesting and screening, and that is the day's entr
 results table from now on. By this rule the first three would have gone differently: A005121 fails check 4,
 A156253 fails check 1, and A040027 passes.
 
+## 2026-11-23: A056240, Sycamore and Marcus. Proved; no earlier proof found.
+
+- **Novelty rechecked** before and after: still no trureturing issue or file, nothing on the web, nothing on the
+  entry beyond a(n) ≥ n.
+- **The odd case, which was open yesterday,** fell to two changes of view. (1) Yesterday's product bound
+  (all parts < S/2 gives > S²/4) needed an induction with floors and exceptions. The form the proof actually uses is
+  better: *integers ≥ 2, none above P, with sum P + r (r ≤ P, P ≥ 5), multiply to at least P·r.* Prove it by
+  grouping, not induction: a list multiplies to at least the product of any grouping's sums. One part ≥ r gives two
+  groups; otherwise add parts until the running sum first reaches r and cut there (two groups if that sum is ≤ P,
+  three if not). Every inequality is then (x − a)(b − x) ≥ 0 in disguise. (2) In the odd case, split on "some odd
+  factor w ≤ r" (rest sums to P + (r+3−w), apply the bound) against "all odd factors > r". In the second, one odd
+  factor means at least four 2s, impossible because 3·5 < 2⁴ (the only place minimality is used beyond the
+  definition), and three odd factors ≥ r + 2 force P ≥ 2r + 3, after which the three-group bound is loose.
+- **Lean.** `SmallTrueThings/A056240.lean`, about 390 lines, compiled after six rounds of small fixes. Things that
+  helped or hurt:
+  - Prime factors as `Nat.primeFactorsList`, sopfr as its sum; `Nat.perm_primeFactorsList_mul` gives
+    sopfr(ab) = sopfr a + sopfr b. Split the list into odd and even parts with `List.filter_append_perm`, defining the
+    even part as `filter (fun x => !decide (x % 2 = 1))` so the lemma matches syntactically.
+  - `zify` pushes casts *into* `List.sum` (`(List.map Nat.cast L).sum`), which omega then treats as a new atom.
+    Put each polynomial inequality in its own lemma over plain naturals (`three_groups`, `three_large`) and zify there.
+  - `set r := n - P` confused omega; `obtain ⟨r, hr⟩ : ∃ r, r = n - P := ⟨_, rfl⟩` did not.
+  - After `match hOc : O with`, the name `O` is gone from the goals: no more `rw [hOc]`.
+  - nlinarith proves cubic bounds if given the products as hints: substitute r = 4 + s, P = r + t mentally and pass
+    `mul_nonneg` of the shifted variables, pairwise and triple.
+  - Deprecations in this Mathlib: `push_neg` → `push Not`, `if_true` → `ite_true`, `Set.mem_setOf_eq` →
+    `Set.mem_ofPred_eq`, `dif_pos` → `simp only [a0, h, dite_true]`.
+- **Reusable.** `A056240.sum_le_prod` (lists of integers ≥ 2), `A056240.split` (first index where a running sum
+  reaches r), `A056240.prod_ge_mul`. The grouping trick should settle other "smallest number with property of its
+  factor multiset" conjectures.
+
 ## 2026-11-22: screening day; A056240 started, not finished
 
 No result today. Seven candidates ruled out (table below), and one that passes every check is under way.
@@ -176,7 +206,6 @@ guess at each is a guess, and none of these has been through all four checks yet
 | A078008 | a(n) = number of fractions with even denominator in "the infinite Farey row of 2^n terms" (Adamson, 2003) | Not in trureturing as of 2026-11-20. Stern's diatomic sequence is even exactly at multiples of 3, which gives Jacobsthal-type counts, but the plain reading gives 0, 1, 1, 3, 5 and the sequence is 1, 0, 2, 2, 6: the row meant has to be pinned down from the HAKMEM link first |
 | A154138 | Indices k with T(k) + 3 a square: conjectured g.f. (2009) | Not in trureturing. (2k+1)² − 8m² = −23, a Pell equation; needs the classes of solutions and a descent. A real one to formalize. 2026-11-22: Seidov writes he believes it; the cited SeqFan thread is not archived, so whether Adams-Watters proved it there is unknown |
 | A003278 | Szekeres's sequence in terms of A191107 and A055246 (Jeffery, 2015) | Not looked at; base 3 |
-| A056240 | a(n) = min of q · a(n−q) over primes q ≥ P_n | **In progress.** Passes all four checks (2026-11-22). Even case proved on paper, odd case open; see the 2026-11-22 entry |
 | A098557 | Mathar's recurrence for the e.g.f. (1+x)·log((1+x)/(1−x))/2 | Not screened; D-finite, likely routine, low beauty |
 | A284230 | Mathar's recurrence for self-avoiding walks in a strip | Not screened; needs the walks' own transfer matrix |
 | A338024 | Cyclic four-peg Hanoi: a(n) = a(n−1) + a(n−2) + a(n−3) − 2a(n−5) for n > 11 | Not screened; looks hard, would need an optimal-strategy theorem |

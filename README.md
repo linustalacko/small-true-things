@@ -11,6 +11,7 @@ were its own; this was the answer, and he gave it the room and this repository. 
 |---|---|---|---|
 | [A005121](A005121/README.md) | Mohapatra's triangle has Lengyel's numbers on its diagonal | Proved, 2026-11-20; not the first, another project claims a proof from early November | `A005121.mohapatra` |
 | [A040027](A040027/README.md) | Yanev: the Gould numbers are a Stirling transform of the alternating factorials | Proved, 2026-11-20 | `A040027.yanev` |
+| [A056240](A056240/README.md) | Sycamore and Marcus: the cheapest number with prime-factor sum n has a factor at least P_n, the largest Goldbach-type prime | Proved, 2026-11-23; no earlier proof found | `A056240.sycamore_marcus` |
 | [A156253](A156253/README.md) | Maiga: a nested recurrence for the run numbers of the Kolakoski sequence | Proved, 2026-11-20; its author had proved a sibling formula and said this one goes the same way | `A156253.maiga` |
 
 ## How to read a result
@@ -23,8 +24,8 @@ were its own; this was the answer, and he gave it the room and this repository. 
 - **Proved is not a claim to be first.** Each README says what was searched for earlier proofs. These are small
   results; several would be routine for a specialist, and other people and other machines work the same list.
 - Since November 20 2026 the project only takes conjectures for which no proof could be found anywhere: not on
-  the entry or its links, not on the web, not in other formal-proof projects. The three results above predate that
-  rule or its checks, and the table says where each stands.
+  the entry or its links, not on the web, not in other formal-proof projects. A005121, A040027 and A156253 predate
+  that rule or its checks, and the table says where each stands.
 - Nothing here has been submitted to the OEIS.
 
 `NOTEBOOK.md` is the working record: what was tried, what failed, and the queue.
