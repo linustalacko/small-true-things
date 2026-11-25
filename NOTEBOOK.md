@@ -18,6 +18,40 @@ given day, the day is spent harvesting and screening, and that is the day's entr
 results table from now on. By this rule the first three would have gone differently: A005121 fails check 4,
 A156253 fails check 1, and A040027 passes.
 
+## 2026-11-25: A154138, triangular numbers plus 3. Proved; no earlier proof found.
+
+- **Screening first.** The OEIS answered 403 (a Cloudflare challenge) on the first request today, so the run worked
+  from the saved harvests. Two candidates fell before this one. A055938 (Stephan 2013: the complement of
+  2k − popcount(k) obeys the self-generating rule b(n+1) = b(n) + 1 or + 3): the proof is three lines (the +3 jumps
+  sit at m − s(m) for even m, and 2j − s(2j) = 2j − s(j)), but Yura, arXiv:2607.22202, linked from the entry, proves
+  the equivalent A080578(n) = A055938(n−1) + 2 (A080578 is defined by that rule). The Kimberling complementary-equation family (A293358, A293765, A294414, A294541 and
+  siblings, ratio → golden ratio): trureturing proved the siblings A293316/A293317 with what its issue calls a
+  "perturbed Fibonacci ratio theorem", and the same argument carries over to the rest of the family.
+- **Why this one.** Last in the queue's "real ones", and it passed all four checks. Not the most beautiful thing in
+  the harvests, but honest: a statement believed since 2009 and never written down. The method is textbook, and
+  the README says a specialist would find it routine.
+- **The idea.** x = 2k+1 turns the condition into x² + 23 = 8y². (x, y) ↦ (3x − 8y, 3y − x) lowers y for y ≥ 6
+  and keeps both coordinates positive, so all solutions come from (3, 2) and (7, 3) by the unit 3 + √8. The two
+  chains interleave, so one sequence `sol` with sol(n+2) = step(sol n) lists them in order, and
+  x(n+4) = 6x(n+2) − x(n) is two steps of the map.
+- **Lean.** `SmallTrueThings/A154138.lean`, about 240 lines, compiled after two fixes. Things that helped:
+  - One interleaved sequence instead of two orbits: the order invariant is just
+    sol n < sol (n+1) < step (sol n), componentwise, and it carries itself by induction with `omega`.
+  - The descent as strong induction on y with `x' = 3x − 8y`, `y' = 3y − x` introduced by `obtain ⟨x', hx'⟩ :
+    ∃ x', x' = …`; then `x = 3x' + 8y'` and `y = x' + 3y'` by `omega`, `subst`, and `nlinarith` for the equation.
+    The three inequalities (8y ≤ 3x, x ≤ 3y, 2y < x) are each `by_contra; nlinarith`.
+  - Small cases: `interval_cases y <;> interval_cases x <;> simp_all` leaves exactly the two real solutions.
+  - `omega` does treat `m ^ 2` and `k * (k + 1)` as atoms, so k(k+1)/2 is handled by
+    `Nat.even_mul_succ_self` and a rewrite.
+  - Uniqueness of an increasing listing: `StrictMono.range_inj_of_wellFoundedLT` (equal ranges ⇒ equal functions).
+  - Power series: rewrite the denominator times A as `A − X^1·A − C 6·(X^2·A) + …` by `ring`, then
+    `coeff_X_pow_mul'`, `coeff_C_mul`, `coeff_X_pow`, `coeff_mk`; numerals must be written `C (2 : ℤ)` or simp
+    leaves `coeff n (2 * X^2)` unevaluated. n < 6 by `interval_cases`, n ≥ 6 by the recurrence and `linarith`.
+  - `theorem foo := proof` without a type does not parse; give the type or use `example`.
+- **Reusable.** The descent and interleaving pattern settles any "k with k(k+1)/2 + c a square" entry with a
+  conjectured linear recurrence: the siblings A154139 to A154147 (listed on A154153) are worth screening for the
+  same kind of conjecture.
+
 ## 2026-11-23: A056240, Sycamore and Marcus. Proved; no earlier proof found.
 
 - **Novelty rechecked** before and after: still no trureturing issue or file, nothing on the web, nothing on the
@@ -204,11 +238,13 @@ guess at each is a guess, and none of these has been through all four checks yet
 | Entry | Conjecture | First look |
 |---|---|---|
 | A078008 | a(n) = number of fractions with even denominator in "the infinite Farey row of 2^n terms" (Adamson, 2003) | Not in trureturing as of 2026-11-20. Stern's diatomic sequence is even exactly at multiples of 3, which gives Jacobsthal-type counts, but the plain reading gives 0, 1, 1, 3, 5 and the sequence is 1, 0, 2, 2, 6: the row meant has to be pinned down from the HAKMEM link first |
-| A154138 | Indices k with T(k) + 3 a square: conjectured g.f. (2009) | Not in trureturing. (2k+1)² − 8m² = −23, a Pell equation; needs the classes of solutions and a descent. A real one to formalize. 2026-11-22: Seidov writes he believes it; the cited SeqFan thread is not archived, so whether Adams-Watters proved it there is unknown |
 | A003278 | Szekeres's sequence in terms of A191107 and A055246 (Jeffery, 2015) | Not looked at; base 3 |
 | A098557 | Mathar's recurrence for the e.g.f. (1+x)·log((1+x)/(1−x))/2 | Not screened; D-finite, likely routine, low beauty |
 | A284230 | Mathar's recurrence for self-avoiding walks in a strip | Not screened; needs the walks' own transfer matrix |
 | A338024 | Cyclic four-peg Hanoi: a(n) = a(n−1) + a(n−2) + a(n−3) − 2a(n−5) for n > 11 | Not screened; looks hard, would need an optimal-strategy theorem |
+| A154139–A154147 | Siblings of A154138 (k(k+1)/2 + c a square, c = 4, 6, 8, …; list on A154153) | Not screened; if any carries a conjectured recurrence, the A154138 descent settles it in an afternoon. Check each for conjectures first |
+| A073783 | Mathar 2026: first differences of the composites = A065310(n+1) | Not screened; A065310's definition unknown here (OEIS was refusing) |
+| A383425, A383427 | Gap sets of index sequences on the Fibonacci word, as A383424 | Not screened; as A383424 |
 | A383424, A383426 | Gap sets of index sequences built on the Fibonacci word A003849 | Not screened; Walnut-style automatic sequences, Dekking has settled siblings (A285683) |
 
 ## Ruled out
@@ -231,4 +267,5 @@ Do not start these; each failed a novelty check.
 | A175254 | Mathar's Σ A006218(n−k): false as printed (n = 2: 5 against 4), a typo for the partial-sum fact on the entry |
 | A000051 | Luschny's permanent conjecture: proved in Fried's note, per the entry |
 | A000700, A010815 | Plouffe's e^(−π) evaluations: proofs on the entries (class invariant, pentagonal theorem) |
-
+| A055938 | Stephan's self-generating rule for the complement of A005187: Yura, arXiv:2607.22202, linked from the entry, proves the equivalent A080578(n) = A055938(n−1) + 2 |
+| A293358, A293765, A294414, A294541, A294546, A294553, A294556–A294558 | Kimberling's golden-ratio limits for complementary equations: trureturing proved the siblings A293316/A293317 with what its issue calls a "perturbed Fibonacci ratio theorem"; the same argument (b(n) = n + O(log n), so a(n) = a(n−1) + a(n−2) + O(n)) carries over, so these are not new in substance |
