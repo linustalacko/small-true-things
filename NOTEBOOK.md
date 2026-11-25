@@ -18,6 +18,43 @@ given day, the day is spent harvesting and screening, and that is the day's entr
 results table from now on. By this rule the first three would have gone differently: A005121 fails check 4,
 A156253 fails check 1, and A040027 passes.
 
+## 2026-11-25 (second run): A154145, triangular numbers plus 15. Proved, and a printed formula refuted
+
+- **The OEIS can be read again, through its own data on GitHub.** oeis.org answered 403 (Cloudflare) to the JSON
+  search, as it did this morning, but `https://raw.githubusercontent.com/oeis/oeisdata/main/seq/A154/A154145.seq`
+  returns the entry in internal format (%N name, %C comments, %F formulas, %H links, %Y cross-references), with no
+  rate limit seen over a dozen fetches. b-files at `oeis.org/A000000/b000000.txt` also loaded. Use the mirror first
+  from now on; it may lag the live site by days, so say which was read. Harvesting by search still needs oeis.org.
+- **Screening, from the saved harvests (`scratch/unscreened.txt`: the 148 conjecture-bearing entries not yet named
+  in this file).** Ruled out today, each with its line in the table below: A210247, A002457, A285681, A285682,
+  A383423 to A383427, A073783, A002034, A183063, A024812, A250120, and the siblings A154139, A154140, A154142,
+  A154146, A154147. Two that came close:
+  - A210247 asks whether li(−n, −1/3) is ever 0 ("not known whether this ever happens"). It never is:
+    A210246(n) = 4^(n+1)·li(−n, −1/3)/3 is Σ (−1)^(n−k) E(n,k) 3^k by Luschny's formula on A210246, and mod 3 only
+    k = 0 survives, so A210246(n) ≡ (−1)^n. That is one line from a formula on a cross-reference, so by the rule it
+    is not a result. A comment on A210247 pointing this out would be worth Linus's time.
+  - A002457, Shunia's (2n+1)!/n!² = ⌊√((16ⁿ+1)^(2n+1))⌋ mod 16ⁿ, is a pretty digit-extraction identity (the
+    binomial series of (1 + 16⁻ⁿ)^(n+1/2), with the nth coefficient exactly the wanted number), but trureturing has
+    issue 23379 for it.
+- **Why A154145.** Yesterday's notebook pointed at the siblings of A154138. Reading them on the mirror: A154140,
+  A154142, A154146 and A154147 are settled or no longer marked, A154141, A154143, A154144 and A154153 are the same
+  two-chain shape as A154138, and A154145 is the odd one out. Its recurrence looks four places back, and the
+  two-step formula printed beside it (Zizka 2009, as a comment and again among the formulas) is false at n = 5. It
+  passed all four checks. Israel's remark on A154142 that the family "follow[s] from the theory of Pell-like
+  equations" is recorded in its README: the method is routine, the statement for c = 15 unproved anywhere found.
+- **The idea.** x² + 119 = 8y²; the descent works from y ≥ 12 and leaves four base solutions, (3,4), (9,5), (13,6),
+  (23,9). The chains interleave in turn, so s(n+4) = step(s n) and a(n) = 6a(n−4) − a(n−8) + 2.
+- **Lean.** `SmallTrueThings/A154145.lean`, a copy of A154138's file with four chains; built on the third try.
+  - The order invariant for m chains: s n < s(n+1) < … < s(n+m−1) < step(s n), componentwise, carried by induction.
+    Keep the first comparison when destructuring the hypothesis: it is the one the new last link needs.
+  - `decide` cannot see through a `def lt` on pairs; `simp only [lt]; decide` can.
+  - The base case search, `interval_cases y <;> interval_cases x <;> simp_all` over y ≤ 11, x ≤ 29, is fast.
+  - A refutation sits in the same theorem as a conjunct `¬ (∀ n, …)`, closed by `norm_num` at n = 5.
+- **Reusable, and the better next step.** The two files are one argument with c and the base list changed. A
+  single theorem for every c (the sorted solutions of x² + 8c − 1 = 8y² satisfy s(n+m) = step(s n), m the number of
+  base solutions with y below the descent bound) would settle A154141, A154143, A154144, A154153 and the rest of
+  A175032's list at once. That is the more beautiful form; it is in the queue.
+
 ## 2026-11-25: A154138, triangular numbers plus 3. Proved; no earlier proof found.
 
 - **Screening first.** The OEIS answered 403 (a Cloudflare challenge) on the first request today, so the run worked
@@ -242,10 +279,9 @@ guess at each is a guess, and none of these has been through all four checks yet
 | A098557 | Mathar's recurrence for the e.g.f. (1+x)·log((1+x)/(1−x))/2 | Not screened; D-finite, likely routine, low beauty |
 | A284230 | Mathar's recurrence for self-avoiding walks in a strip | Not screened; needs the walks' own transfer matrix |
 | A338024 | Cyclic four-peg Hanoi: a(n) = a(n−1) + a(n−2) + a(n−3) − 2a(n−5) for n > 11 | Not screened; looks hard, would need an optimal-strategy theorem |
-| A154139–A154147 | Siblings of A154138 (k(k+1)/2 + c a square, c = 4, 6, 8, …; list on A154153) | Not screened; if any carries a conjectured recurrence, the A154138 descent settles it in an afternoon. Check each for conjectures first |
-| A073783 | Mathar 2026: first differences of the composites = A065310(n+1) | Not screened; A065310's definition unknown here (OEIS was refusing) |
-| A383425, A383427 | Gap sets of index sequences on the Fibonacci word, as A383424 | Not screened; as A383424 |
-| A383424, A383426 | Gap sets of index sequences built on the Fibonacci word A003849 | Not screened; Walnut-style automatic sequences, Dekking has settled siblings (A285683) |
+| A000695 | Rascoe 2022: a tree whose node counts give the sums of distinct powers of k | Not screened; the rule as I read it fails at n = 4 for every k > 2 (it gives k² − k + 2 nodes, not k²), so the meaning depends on the linked illustration, which was not read |
+| A007917 | Shunia: largest prime ≤ n = ⌊log Σ_{k=2..n} e^(φ(k)+1)⌋ | Not screened; composites k between p and the next prime have φ(k) + 1 close to p only if the gap is near √p, so a proof seems to need a prime-gap bound: likely out of reach, but a counterexample search is cheap |
+| A154141, A154143, A154144, A154153 | Mathar's recurrences for k(k+1)/2 + c a square, c = 8, 10, 13, 28 (two chains each, as A154138) | Screened 2026-11-25 on the mirror: still marked conjectures, no proof on the entries, no trureturing issue or file for the family as of 2026-11-25 (A154138's check). Routine one by one (Israel's remark on A154142). Better: one Lean theorem for all c, then each entry as an instance. Also check A175032's full list for others with conjectures |
 
 ## Ruled out
 
@@ -269,3 +305,15 @@ Do not start these; each failed a novelty check.
 | A000700, A010815 | Plouffe's e^(−π) evaluations: proofs on the entries (class invariant, pentagonal theorem) |
 | A055938 | Stephan's self-generating rule for the complement of A005187: Yura, arXiv:2607.22202, linked from the entry, proves the equivalent A080578(n) = A055938(n−1) + 2 |
 | A293358, A293765, A294414, A294541, A294546, A294553, A294556–A294558 | Kimberling's golden-ratio limits for complementary equations: trureturing proved the siblings A293316/A293317 with what its issue calls a "perturbed Fibonacci ratio theorem"; the same argument (b(n) = n + O(log n), so a(n) = a(n−1) + a(n−2) + O(n)) carries over, so these are not new in substance |
+| A210247 | Kurkov's a(n) = −a(n−28): refuted on the entry (Israel, n = 578). The entry's open question, whether li(−n,−1/3) is ever 0, is answered in one line by Luschny's Eulerian formula on A210246 (it is ≡ (−1)^n mod 3), so not new in substance |
+| A002457 | Shunia's square-root residue formula: trureturing issue 23379 |
+| A285681, A285682 | Kimberling's gap sets for A285680: Dekking's note on A285683 gives the return words of 1010 in the Fibonacci word, so A285680 is a string of the blocks 20100 and 20 and both gap sets follow |
+| A383423–A383427 | Gap sets on the Fibonacci word: Ashburn, arXiv:2610.04842 (Walnut) |
+| A073783 | Mathar: differences of composites = A065310(n+1). A065310(n) counts the j with j − π(j) = n, the gap between nonprimes, and A179278's cross-reference already says so |
+| A002034 | Granvik's cosine formula for the Kempner function: Yang Xu's proof is linked from the entry (Zenodo) |
+| A183063 | Yanev's cotangent limit for even divisors: in trureturing's triage file `Library/Words/oeis2026triage0910.md` |
+| A024812 | Barker's recurrence: refuted on the entry (Buran, 2026, n = 15) |
+| A250120 | Coordination sequence of 3^4.6: proved by Goodman-Strauss and Sloane, per the entry |
+| A154139, A154147 | Formulas no longer marked as conjectures |
+| A154140 | Closed forms in A001652 and A001653 on the entry give the recurrence |
+| A154142, A154146 | Israel: "follow from the theory of Pell-like equations" (2015), and a linked proof (2019) |

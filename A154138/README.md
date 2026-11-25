@@ -83,6 +83,11 @@ Run on November 25 2026, before the proof was started:
 4. The trureturing project has no issue and no file mentioning A154138, nor any of its siblings A006451 and
    A154139 to A154147, nor A154153 (searched with `gh api search/issues` and `gh search code`).
 
+Added later the same day, while working on the sibling A154145: two siblings that A154138 does not link carry the
+method. On A154142 Robert Israel wrote in 2015 that its conjectures "follow from the theory of Pell-like equations",
+with closed forms, and A154146 links his 2019 proof of its recurrence. Neither covers c = 3, but they confirm that the
+method is known for this family; the check above searched only A154138's own links.
+
 So no earlier proof was found. That is not a claim to be first, and the method is the textbook one: a specialist
 would find this proof routine. What was missing was the proof written down.
 
