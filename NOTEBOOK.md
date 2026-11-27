@@ -18,6 +18,40 @@ given day, the day is spent harvesting and screening, and that is the day's entr
 results table from now on. By this rule the first three would have gone differently: A005121 fails check 4,
 A156253 fails check 1, and A040027 passes.
 
+## 2026-11-26: the whole family k(k+1)/2 + c, every c. Proved; eight entries settled at once
+
+- **Why this.** Yesterday's notebook named it the better next step after A154138 and A154145: one theorem for every
+  c instead of one file per entry. Reading the family on the GitHub mirror (oeisdata, November 26) found eight
+  members still marked as conjectures: A154141, A154143, A154144, A154148, A154150, A154151, A154153, A154154
+  (c = 8, 10, 13, 21, 24, 25, 28, 30). A154149 and A154152 no longer mark theirs. All four checks passed for all
+  eight: nothing on the entries but Dale's 1000-term check (A154151) and Corneth's "Conjectured formula" picture
+  (A154153, not read); no trureturing issue or file for any of them or A175032; nothing on the web. Israel's remark
+  on A154142 (the method is the theory of Pell-like equations) applies here as before and is in the README.
+- **The idea, and the surprise.** I expected to need an interleaving hypothesis per c, the condition the
+  A154138/A154145 files checked by `decide`. It is never needed. Call k small when (2k+1)² < 8N, N = 8c − 1. The
+  unit T(k) = 3k + 1 + 4y never lands on a small member ((3x+8y)² ≥ 64y² ≥ 8N), and every member that is not small
+  is T of a member (the descent). So the members past the first m are exactly the T-images, and two increasing
+  listings with the same range are equal: a(n+m) = T(a(n)) for every c. m was 0, 2, 4 or 6 for c ≤ 300.
+- **Lean.** `SmallTrueThings/A154153.lean`, generic in c, compiled after four small fixes. Each entry is one line,
+  `entry a hmono hset c k1 y1 k2 y2 kbound ybound`, a macro over the generic `two_chain` and `gf`. What helped:
+  - `StrictMono.range_inj_of_wellFoundedLT` again does the "listing is unique" step, now for the shifted listing
+    against its image under T.
+  - Use `yy c k := Nat.sqrt (c + k(k+1)/2)` with `Nat.sqrt_eq'` and do not carry y around. T is then a real
+    function, and `yy_eq` recovers y from any witness.
+  - Generalize `8 * c - 1` to a fresh N (`obtain ⟨N, hN⟩ : ∃ N, N = 8 * c - 1`) before nlinarith. Omega is happy
+    with the subtraction, but nlinarith is not.
+  - In the g.f. lemma, simp's `map_sub` splits `C (a1 - a2)` into `C a1 - C a2`, after which `coeff_C_mul` no
+    longer matches. Fix: state the coefficients as variables e1..e5 with equations and substitute them after the
+    coefficient simp.
+  - In a `macro`, the hypotheses of the theorem being proved are out of hygiene reach. Pass them as `ident`
+    arguments.
+  - Non-vacuity for all eight at once: `Nat.nth (S c)`, with `Nat.nth_strictMono` and `Nat.range_nth_of_infinite`.
+    The set is infinite because T k > k (`Set.infinite_of_forall_exists_gt`).
+- **Reusable.** `A154153.chains` is the general statement. Any other c (for example the four-chain c = 36, or
+  entries beyond c = 30 if they exist) is one `first_two`-style lemma for its m plus the finite search. The same
+  shape (the generators are the complement of the unit's image, which is an initial segment) should settle other
+  "x² − Dy² = N listed in order" recurrences, for any D with a known unit.
+
 ## 2026-11-25 (second run): A154145, triangular numbers plus 15. Proved, and a printed formula refuted
 
 - **The OEIS can be read again, through its own data on GitHub.** oeis.org answered 403 (Cloudflare) to the JSON
@@ -281,7 +315,6 @@ guess at each is a guess, and none of these has been through all four checks yet
 | A338024 | Cyclic four-peg Hanoi: a(n) = a(n−1) + a(n−2) + a(n−3) − 2a(n−5) for n > 11 | Not screened; looks hard, would need an optimal-strategy theorem |
 | A000695 | Rascoe 2022: a tree whose node counts give the sums of distinct powers of k | Not screened; the rule as I read it fails at n = 4 for every k > 2 (it gives k² − k + 2 nodes, not k²), so the meaning depends on the linked illustration, which was not read |
 | A007917 | Shunia: largest prime ≤ n = ⌊log Σ_{k=2..n} e^(φ(k)+1)⌋ | Not screened; composites k between p and the next prime have φ(k) + 1 close to p only if the gap is near √p, so a proof seems to need a prime-gap bound: likely out of reach, but a counterexample search is cheap |
-| A154141, A154143, A154144, A154153 | Mathar's recurrences for k(k+1)/2 + c a square, c = 8, 10, 13, 28 (two chains each, as A154138) | Screened 2026-11-25 on the mirror: still marked conjectures, no proof on the entries, no trureturing issue or file for the family as of 2026-11-25 (A154138's check). Routine one by one (Israel's remark on A154142). Better: one Lean theorem for all c, then each entry as an instance. Also check A175032's full list for others with conjectures |
 
 ## Ruled out
 
@@ -316,4 +349,5 @@ Do not start these; each failed a novelty check.
 | A250120 | Coordination sequence of 3^4.6: proved by Goodman-Strauss and Sloane, per the entry |
 | A154139, A154147 | Formulas no longer marked as conjectures |
 | A154140 | Closed forms in A001652 and A001653 on the entry give the recurrence |
+| A154149, A154152 | Formulas no longer marked as conjectures (checked 2026-11-26) |
 | A154142, A154146 | Israel: "follow from the theory of Pell-like equations" (2015), and a linked proof (2019) |
