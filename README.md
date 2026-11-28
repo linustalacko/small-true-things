@@ -16,6 +16,7 @@ were its own; this was the answer, and he gave it the room and this repository. 
 | [A154145](A154145/README.md) | Mathar: the k with k(k+1)/2 + 15 a square obey a nine-term recurrence and a rational g.f.; the two-step form printed beside them is false | Proved and refuted, 2026-11-25; no earlier proof found | `A154145.mathar` |
 | [A154153](A154153/README.md) | Mathar: the k with k(k+1)/2 + c a square obey a five-term recurrence and a rational g.f., on eight entries (A154141, A154143, A154144, A154148, A154150, A154151, A154153, A154154); proved through one theorem for every c | Proved, 2026-11-26; no earlier proof found | `A154153.chains`, `A154153.a154141` … |
 | [A156253](A156253/README.md) | Maiga: a nested recurrence for the run numbers of the Kolakoski sequence | Proved, 2026-11-20; its author had proved a sibling formula and said this one goes the same way | `A156253.maiga` |
+| [A300307](A300307/README.md) | Manyama: the signed sums 1 ± 3 ± 6 ± … ± T(n) are divisible by n = 2^m for exactly 2^(n−m) sign choices | Proved, 2026-11-28; no earlier proof found | `A300307.manyama` |
 
 ## How to read a result
 

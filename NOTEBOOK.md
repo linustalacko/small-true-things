@@ -11,12 +11,49 @@ not things to be known as true". Before any proof is started, a candidate has to
 1. The entry and everything it links to show no proof, and nobody there says it is true or that a proof is routine.
 2. It is not a short corollary of a formula already on the entry or its cross-references.
 3. A web search for the conjecture finds no proof.
-4. `the-omega-institute/trureturing` has no issue or file for the A-number.
+4. `the-omega-institute/trureturing` has no issue or file for the A-number, and (since 2026-11-28)
+   neither has `GuillaumeBAUD-coder/open-math-agents`.
 
 A candidate that fails gets one line under "Ruled out" below, so no run tries it again. If nothing passes on a
 given day, the day is spent harvesting and screening, and that is the day's entry. Nothing known goes in the
 results table from now on. By this rule the first three would have gone differently: A005121 fails check 4,
 A156253 fails check 1, and A040027 passes.
+
+## 2026-11-28: A300307, signed triangular numbers mod 2^m. Proved; no earlier proof found
+
+- **A second machine project.** `GuillaumeBAUD-coder/open-math-agents` takes pull requests named `oeis-a<number>`,
+  each body naming the agent and model that wrote it ("Agent: codex"), with PR numbers past 13,900 on November 27.
+  It had merged proofs of two of today's first picks the day before (A301977, A301933). From now on check 4 searches both repositories:
+  `gh api "search/issues?q=repo:GuillaumeBAUD-coder/open-math-agents+A000000"` and `gh search code` likewise.
+- **Harvest without oeis.org.** oeis.org still answers 403. A blobless sparse clone of the mirror,
+  `git clone --depth 1 --filter=blob:none --sparse https://github.com/oeis/oeisdata.git` then
+  `git sparse-checkout set seq/A300 … seq/A305`, gives 6,000 entries in 100 MB. `scratch/tools/scan.py <dir>` lists
+  the entries with a "Conjecture" line and no word like proved/true/counterexample anywhere: 229 for A300–A305
+  (`scratch/harvest_A300.txt`), 158 after dropping Sun's representation conjectures and asymptotics.
+  `scratch/tools/screen.sh` runs both projects' issue searches over a list (`scratch/screen_A300.txt`).
+- **Ruled out first** (lines in the table below): A301977, A301933, A302975, A300789.
+- **Why A300307.** Manyama's a(2^m) = 2^(2^m − m) says the good sign choices are exactly twice the fair-coin count,
+  which asks for a reason. It passed all four checks.
+- **The idea.** The total 1 + 3 + … + T(n) = n(n+1)(n+2)/6 is divisible by 2^m, so the condition is 2^(m−1) | ΣT(S)
+  over the minus set S; that halving of the modulus is the factor 2. T(2^(j+1)) = 2^j(2^(j+1) + 1) gives one term of
+  each valuation j < m − 1, and a list with that property has uniform subset sums mod 2^M (remove the top-valuation
+  term y ≡ 2^M mod 2^(M+1): with and without y, exactly one of the two lands in each class mod 2^(M+1) that the rest
+  hits mod 2^M). The same proof gives the uncited formula on the sibling A300190 (checked numerically, not in Lean).
+- **Lean.** `SmallTrueThings/A300307.lean`, about 200 lines, compiled on the fourth run. What helped:
+  - Count subsets as `∑ S ∈ s.powerset, if P S then 1 else 0` (`card_filter` converts), then
+    `sum_powerset_insert` splits on y and `← sum_add_distrib` plus a pointwise lemma merges the two halves.
+  - The hypothesis "for each j < M some element is 2^j · odd" needs no distinctness: different valuations force
+    different indices, shown by cancelling 2^j and `omega` on odd = 2·x.
+  - `rw` fails under an `if` (motive not type correct, the `Decidable` instance); prove the iff's as `have`s and use
+    `simp only [e1, e2, e3, ite_true]`.
+  - `pow_succ` rewrites inside a ℕ argument too (`T (2^(j+1))`); state the ℤ fact `(2:ℤ)^(j+1) = 2 * 2^j` and
+    rewrite with that.
+  - Renames in this Mathlib: `not_mem_erase` → `notMem_erase`, `card_insert_of_not_mem` → `card_insert_of_notMem`;
+    `dvd_add_right (h : a ∣ b) : a ∣ b + c ↔ a ∣ c`. A docstring must come after `set_option … in`, not before.
+  - `decide` checks the count's first six values once `maxRecDepth` is raised.
+- **Reusable.** `A300307.uniform` (subset sums with one element of each valuation below M are uniform mod 2^M), for
+  any weights. Manyama made a family of these: A300190 (1 ± 2 ± … ± n), A300218 (odd numbers), A300268 and A300269
+  (squares, cubes). Their power-of-2 or other closed forms, where conjectured, are worth screening next.
 
 ## 2026-11-26: the whole family k(k+1)/2 + c, every c. Proved; eight entries settled at once
 
@@ -314,6 +351,8 @@ guess at each is a guess, and none of these has been through all four checks yet
 | A284230 | Mathar's recurrence for self-avoiding walks in a strip | Not screened; needs the walks' own transfer matrix |
 | A338024 | Cyclic four-peg Hanoi: a(n) = a(n−1) + a(n−2) + a(n−3) − 2a(n−5) for n > 11 | Not screened; looks hard, would need an optimal-strategy theorem |
 | A000695 | Rascoe 2022: a tree whose node counts give the sums of distinct powers of k | Not screened; the rule as I read it fails at n = 4 for every k > 2 (it gives k² − k + 2 nodes, not k²), so the meaning depends on the linked illustration, which was not read |
+| A302694 | Gerasimov: the least k with k·n a sum of exactly three squares (and no fewer) is at most 6 | Seen 2026-11-28; no hits in either project. A case analysis on n mod 8 and the 3-mod-4 primes looks short, but showing k·n *is* a sum of three squares needs Legendre's three-square theorem, which this Mathlib does not have. A multi-day project if taken: formalize Legendre first |
+| A305211 | Corneth: the number of values of x³ + y³ mod n is multiplicative, and is n with each factor 7 and 9 replaced by 5 | Seen 2026-11-28; no hits in either project. Multiplicativity is the Chinese remainder theorem alone (too slight to count). The formula needs every residue mod p ≡ 1 (mod 3), p ≥ 13, to be a sum of two cubes: cyclotomic numbers of order 3, or Mathlib's Jacobi sums. Hensel mod 7^k is easy; mod 3^k needs care |
 | A007917 | Shunia: largest prime ≤ n = ⌊log Σ_{k=2..n} e^(φ(k)+1)⌋ | Not screened; composites k between p and the next prime have φ(k) + 1 close to p only if the gap is near √p, so a proof seems to need a prime-gap bound: likely out of reach, but a counterexample search is cheap |
 
 ## Ruled out
@@ -351,3 +390,7 @@ Do not start these; each failed a novelty check.
 | A154140 | Closed forms in A001652 and A001653 on the entry give the recurrence |
 | A154149, A154152 | Formulas no longer marked as conjectures (checked 2026-11-26) |
 | A154142, A154146 | Israel: "follow from the theory of Pell-like equations" (2015), and a linked proof (2019) |
+| A301977 | Gutkovskiy's Stirling-parity count of binary subsequences: open-math-agents PR 8938 (merged 2026-11-27) proves it in Lean, citing Carlitz (1964) and Leroy, Rigo and Stipulanti (2017), who tie both sides to Stern's sequence |
+| A301933 | Hanna's parity pattern: open-math-agents PR 9808 (merged 2026-11-27) and `statements/oeis-a301933.lean` |
+| A302975 | Krizek's "denominator is a square": six trureturing issues. (The proof is short: n^τ(n) is the square of the product of divisors, and for odd n and p dividing both n and τ(n), n·v_p(τ) ≥ n > τ(n)·v_p(n).) |
+| A300789 | Domino-tileable Young diagrams as a balance of odd parts: classical (a Young diagram tiles by dominoes iff its 2-core is empty, which is that balance condition) |
