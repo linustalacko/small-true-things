@@ -31,6 +31,8 @@ A156253 fails check 1, and A040027 passes.
   the entries with a "Conjecture" line and no word like proved/true/counterexample anywhere: 229 for A300–A305
   (`scratch/harvest_A300.txt`), 158 after dropping Sun's representation conjectures and asymptotics.
   `scratch/tools/screen.sh` runs both projects' issue searches over a list (`scratch/screen_A300.txt`).
+  Result for all 229: 68 have a hit in one project or both, 161 have none (columns: A-number, trureturing, open-math-agents).
+  The clone stays in `scratch/oeisdata` for the next harvest (`git sparse-checkout add seq/A306`).
 - **Ruled out first** (lines in the table below): A301977, A301933, A302975, A300789.
 - **Why A300307.** Manyama's a(2^m) = 2^(2^m − m) says the good sign choices are exactly twice the fair-coin count,
   which asks for a reason. It passed all four checks.
